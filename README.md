@@ -92,4 +92,4 @@ Output:
 
 <img width="730" height="784" alt="image" src="https://github.com/user-attachments/assets/519a215b-a39d-4258-8821-7f4696257bb1" />
 
-Currently, the agent returns a placeholder message like "Processing completed by Praval agent." The system is set up and ready.
+Currently, the agent returns a placeholder message like "Processing completed by Praval agent." .
