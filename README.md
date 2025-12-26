@@ -93,3 +93,9 @@ Output:
 <img width="730" height="784" alt="image" src="https://github.com/user-attachments/assets/519a215b-a39d-4258-8821-7f4696257bb1" />
 
 Currently, the agent returns a placeholder message like "Processing completed by Praval agent." .
+
+
+### Latest Update
+- Reviewed and refined the Praval agent flow
+- Verified stability of the end-to-end pipeline
+
