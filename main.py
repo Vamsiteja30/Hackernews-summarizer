@@ -7,8 +7,6 @@ from praval import start_agents, get_reef
 from praval_agent import hn_summary_agent
 from agent import prepare_text_for_agent
 
-
-
 TOP_STORIES_URL = "https://hacker-news.firebaseio.com/v0/topstories.json"
 ITEM_URL_TEMPLATE = "https://hacker-news.firebaseio.com/v0/item/{id}.json"
 
@@ -99,6 +97,7 @@ def main():
         print(f"Successfully fetched {len(stories)} stories.\n")
         print("Praval agent integration active.\n")
         
+        # Process all IMPORTANT/TRENDING stories
         for idx, story in enumerate(stories, start=1):
             link = story.url or f"https://news.ycombinator.com/item?id={story.id}"
             
@@ -115,13 +114,12 @@ def main():
                 f"   {link}"
             )
             
-            # Send IMPORTANT and TRENDING posts to Praval agent
             if label in ["IMPORTANT", "TRENDING"]:
-                # Prepare text for the agent
+               
                 agent_input_text = prepare_text_for_agent(story)
                 
                 try:
-                    # Start the Praval agent with the story data
+                   
                     start_agents(
                         hn_summary_agent,
                         initial_data={
@@ -130,24 +128,31 @@ def main():
                         }
                     )
                     
-                    # Wait for the agent to complete processing
                     get_reef().wait_for_completion()
-                    
-                    print("\n    Agent Summary: Processing completed by Praval agent.")
-                    
-                    # Shutdown the reef for this request
-                    get_reef().shutdown()
+                    print()  
                     
                 except Exception as agent_error:
                     print(f"\n     Agent Error: {agent_error}")
+                    print(f"   Error type: {type(agent_error).__name__}")
+                    import traceback
+                    traceback.print_exc()
                     print("   (Continuing with next story...)\n")
             else:
                 print("   (Skipped - NORMAL posts are not sent to agent)\n")
+        
+        try:
+            get_reef().shutdown()
+        except:
+            pass  
                 
     except Exception as e:
         print(f"Error fetching stories: {e}")
         print("Please check your internet connection and try again.")
+        try:
+            get_reef().shutdown()
+        except:
+            pass
 
 
 if __name__ == "__main__":
-    main()
+    main()  
