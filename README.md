@@ -1,6 +1,8 @@
 # HackerNews Summarizer
 
-This project fetches top stories from HackerNews and prepares them for summarization. Instead of reading through long discussion threads, users get quick summaries of the most important posts.
+This project fetches top stories from HackerNews and automatically generates AI-powered summaries of the most important posts. Instead of reading through long discussion threads, users get concise 2-sentence summaries that capture the essence of each story.
+
+The system intelligently identifies which posts matter (high scores, lots of comments, or trending topics) and uses AI to create quick summaries. It's built with Praval agents and supports both OpenAI and Gemini for reliable summarization.
 
 ## Day 1 – HackerNews API Integration 
 
@@ -63,7 +65,7 @@ When running the script, clear labels show which posts are worth attention. This
 
 <img width="730" height="685" alt="image" src="https://github.com/user-attachments/assets/fcd348e0-59ec-48c8-bfd6-1156080be84e" />
 
-## Day 3 – Building the Agent System
+## Day 3,4 – Building the Agent System
 
 This phase moved from a simple script to an agent-based system. An agent takes information, processes it, and returns a result.
 
@@ -88,14 +90,53 @@ What was implemented:
 
 The Praval agent was connected to the HackerNews pipeline. Now, whenever IMPORTANT or TRENDING posts are identified, they automatically get sent to the Praval agent for processing.
 
-Output:
+## Day 5,6 – AI Summarization Integration
 
-<img width="730" height="784" alt="image" src="https://github.com/user-attachments/assets/519a215b-a39d-4258-8821-7f4696257bb1" />
+The agent system was ready, but it needed real intelligence to generate summaries. This phase integrated AI models to produce actual 2-sentence summaries.
 
-Currently, the agent returns a placeholder message like "Processing completed by Praval agent." .
+### AI Provider Setup
 
+The system uses a dual-provider approach for reliability:
+- **OpenAI (Primary)** – Uses `gpt-4o-mini` model for fast, high-quality summaries
+- **Gemini (Fallback)** – Automatically switches to Google's Gemini API if OpenAI fails
 
-### Latest Update
-- Reviewed and refined the Praval agent flow
-- Verified stability of the end-to-end pipeline
+This fallback mechanism ensures the system keeps working even if one AI service has issues, quota limits, or downtime.
+
+### How It Works
+
+When an IMPORTANT or TRENDING post is identified:
+1. The post data is prepared as clean text (title, author, score, comments, URL)
+2. The text is sent to the Praval agent
+3. The agent tries OpenAI first
+4. If OpenAI fails, it automatically tries Gemini
+5. A 2-sentence summary is generated and displayed
+
+The system handles errors gracefully. If both AI providers fail, it displays a clear error message and continues processing other posts.
+
+### Environment Setup
+
+To use AI summarization, you need API keys:
+
+1. **Create a `.env` file** in the project root:
+   ```
+   OPENAI_API_KEY=your_openai_key_here
+   GEMINI_API_KEY=your_gemini_key_here
+   ```
+
+2. **Get API Keys:**
+   - OpenAI: https://platform.openai.com/api-keys
+   - Gemini: https://makersuite.google.com/app/apikey
+
+3. **Run the script:**
+   ```bash
+   python main.py
+   ```
+
+The script will automatically use OpenAI for summaries. If OpenAI is unavailable, it switches to Gemini seamlessly.
+
+Output:-
+
+<img width="1207" height="864" alt="image" src="https://github.com/user-attachments/assets/d7690dcd-4eda-401e-b426-bdec81064ef9" />
+<img width="1204" height="542" alt="image" src="https://github.com/user-attachments/assets/939d12f7-0af2-461b-870b-6ec10b73e53f" />
+
 
