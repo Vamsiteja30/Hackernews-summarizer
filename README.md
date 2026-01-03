@@ -140,3 +140,67 @@ Output:-
 <img width="1204" height="542" alt="image" src="https://github.com/user-attachments/assets/939d12f7-0af2-461b-870b-6ec10b73e53f" />
 
 
+## Todays update  – FastAPI Backend Setup
+
+This phase adds a FastAPI backend to expose the summarization functionality via REST API endpoints.
+
+### What Was Built
+
+A basic FastAPI application with:
+- **Health check endpoint** (`GET /`) – Returns server status
+- **Stories endpoint** (`GET /stories`) – Placeholder for fetching top stories
+
+### Installation
+
+1. **Install FastAPI and Uvicorn:**
+   ```bash
+   pip install fastapi uvicorn
+   ```
+   
+   Or install all dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the Server
+
+1. **Start the FastAPI server:**
+   ```bash
+   uvicorn api:app --reload
+   ```
+
+2. **Access the API:**
+   - **Health Check:** http://localhost:8000
+   - **Stories Endpoint:** http://localhost:8000/stories
+   - **Interactive Docs (Swagger UI):** http://localhost:8000/docs
+   - **Alternative Docs (ReDoc):** http://localhost:8000/redoc
+
+### Expected Output
+
+When you visit http://localhost:8000, you should see:
+```json
+{"status": "ok"}
+```
+
+When you visit http://localhost:8000/stories, you should see:
+```json
+{"stories": []}
+```
+
+### File Structure
+
+- `api.py` – FastAPI application with basic endpoints
+
+### Common Mistakes to Avoid
+
+- **Wrong import:** Make sure to use `from fastapi import FastAPI`
+- **Not running server:** Remember to run `uvicorn api:app --reload`
+- **Wrong port:** Default port is 8000, use `http://localhost:8000` (not `0.0.0.0:8000`)
+
+Output :-
+<img width="1017" height="272" alt="image" src="https://github.com/user-attachments/assets/0095b980-3641-4fae-b3e8-560cf3b03ca2" />
+<img width="1919" height="346" alt="image" src="https://github.com/user-attachments/assets/7a2bbaa0-a94e-4a67-8774-886f1aedba5b" />
+<img width="1913" height="208" alt="image" src="https://github.com/user-attachments/assets/ef426aab-1387-4ccd-b12f-2bffd030f9c3" />
+
+
+
