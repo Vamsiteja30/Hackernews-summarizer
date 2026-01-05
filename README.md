@@ -140,7 +140,7 @@ Output:-
 <img width="1204" height="542" alt="image" src="https://github.com/user-attachments/assets/939d12f7-0af2-461b-870b-6ec10b73e53f" />
 
 
-## Todays update  – FastAPI Backend Setup
+##  FastAPI Backend Setup
 
 This phase adds a FastAPI backend to expose the summarization functionality via REST API endpoints.
 
@@ -187,6 +187,9 @@ When you visit http://localhost:8000/stories, you should see:
 {"stories": []}
 ```
 
+Output :-
+<img width="1017" height="272" alt="image" src="https://github.com/user-attachments/assets/0095b980-3641-4fae-b3e8-560cf3b03ca2" />
+
 ### File Structure
 
 - `api.py` – FastAPI application with basic endpoints
@@ -197,8 +200,95 @@ When you visit http://localhost:8000/stories, you should see:
 - **Not running server:** Remember to run `uvicorn api:app --reload`
 - **Wrong port:** Default port is 8000, use `http://localhost:8000` (not `0.0.0.0:8000`)
 
-Output :-
-<img width="1017" height="272" alt="image" src="https://github.com/user-attachments/assets/0095b980-3641-4fae-b3e8-560cf3b03ca2" />
+## Todays Story Fetching API
+
+This phase implements endpoints to fetch HackerNews stories via the API.
+
+### What Was Built
+
+Story fetching endpoints with:
+- **`GET /stories`** – Fetch top stories from HackerNews with optional limit parameter
+- **`GET /stories/important`** – Fetch only important stories (score ≥150 or comments ≥50)
+
+### Implementation Details
+
+1. **`/stories` Endpoint:**
+   - Query parameter: `limit` (default: 10)
+   - Fetches stories using `fetch_top_stories()` from `main.py`
+   - Returns JSON with story data: id, title, author, score, comments, url, time
+
+2. **`/stories/important` Endpoint:**
+   - Fetches top 50 stories and filters for important ones
+   - Uses `is_important()` function to filter
+   - Returns JSON with only important stories
+
+3. **Error Handling:**
+   - Try/except blocks for all endpoints
+   - Returns error messages in JSON format if requests fail
+
+### How to Test
+
+1. **Start the server:**
+   ```bash
+   uvicorn api:app --reload
+   ```
+
+2. **Test endpoints:**
+   - **Top stories:** http://localhost:8000/stories?limit=5
+   - **Important stories:** http://localhost:8000/stories/important
+   - **Interactive docs:** http://localhost:8000/docs
+
+### Expected Output
+
+**`/stories` endpoint:**
+```json
+{
+  "stories": [
+    {
+      "id": 12345678,
+      "title": "Example Story",
+      "author": "username",
+      "score": 250,
+      "comments": 75,
+      "url": "https://example.com",
+      "time": 1234567890
+    }
+  ]
+}
+```
+
+**`/stories/important` endpoint:**
+```json
+{
+  "stories": [
+    {
+      "id": 12345678,
+      "title": "Important Story",
+      "author": "username",
+      "score": 200,
+      "comments": 60,
+      "url": "https://example.com",
+      "time": 1234567890
+    }
+  ]
+}
+```
+
+Output:-
+
+<img width="715" height="825" alt="image" src="https://github.com/user-attachments/assets/bc6d04e4-413b-4225-85e6-b490d12f5377" />
+<img width="1919" height="188" alt="image" src="https://github.com/user-attachments/assets/c5136e0d-6f4c-4d22-ab5c-1a2c3a6a1e24" />
+<img width="686" height="822" alt="image" src="https://github.com/user-attachments/assets/620ac7a7-65e7-440c-bea1-a6eb19cf915e" />
+<img width="1919" height="483" alt="image" src="https://github.com/user-attachments/assets/20a201a2-b254-46df-93ea-77a7ec4ba2ae" />
+<img width="1919" height="770" alt="image" src="https://github.com/user-attachments/assets/8a652af7-ca3e-45f6-8c11-ff4add44e106" />
+
+
+### Common Mistakes to Avoid
+
+- **Wrong return type:** Return dict (not list directly)
+- **Not handling errors:** Add try/except blocks
+- **Missing imports:** Import `fetch_top_stories` and `is_important` from `main.py`
+
 <img width="1919" height="346" alt="image" src="https://github.com/user-attachments/assets/7a2bbaa0-a94e-4a67-8774-886f1aedba5b" />
 <img width="1913" height="208" alt="image" src="https://github.com/user-attachments/assets/ef426aab-1387-4ccd-b12f-2bffd030f9c3" />
 
