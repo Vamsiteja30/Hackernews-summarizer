@@ -289,8 +289,6 @@ Output:-
 - **Not handling errors:** Add try/except blocks
 - **Missing imports:** Import `fetch_top_stories` and `is_important` from `main.py`
 
-<img width="1919" height="346" alt="image" src="https://github.com/user-attachments/assets/7a2bbaa0-a94e-4a67-8774-886f1aedba5b" />
-<img width="1913" height="208" alt="image" src="https://github.com/user-attachments/assets/ef426aab-1387-4ccd-b12f-2bffd030f9c3" />
 
 
 
