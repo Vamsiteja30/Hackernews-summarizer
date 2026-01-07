@@ -257,3 +257,4 @@ def generate_summary(request: SummaryRequest):
             detail=f"Error generating summary: {str(e)}"
         )
 
+
