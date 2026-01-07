@@ -38,7 +38,6 @@ def fetch_story(story_id: int) -> Optional[Story]:
         response.raise_for_status()
         data = response.json()
         
-        # Skip if story data is None (deleted posts)
         if data is None:
             return None
 
@@ -114,13 +113,11 @@ def main():
                 f"   {link}"
             )
             
-            # Send IMPORTANT and TRENDING posts to Praval agent
             if label in ["IMPORTANT", "TRENDING"]:
-                # Prepare text for the agent
+
                 agent_input_text = prepare_text_for_agent(story)
                 
                 try:
-                    # Start the Praval agent with the story data
                     start_agents(
                         hn_summary_agent,
                         initial_data={
@@ -129,10 +126,9 @@ def main():
                         }
                     )
                     
-                    # Wait for the agent to complete processing
+
                     get_reef().wait_for_completion()
-                    # Don't shutdown here - keep reef alive for next posts
-                    print()  # Add spacing between posts
+                    print()  
                     
                 except Exception as agent_error:
                     print(f"\n     Agent Error: {agent_error}")
@@ -143,16 +139,14 @@ def main():
             else:
                 print("   (Skipped - NORMAL posts are not sent to agent)\n")
         
-        # Shutdown reef after processing all stories
         try:
             get_reef().shutdown()
         except:
-            pass  # Ignore if already shut down
+            pass 
                 
     except Exception as e:
         print(f"Error fetching stories: {e}")
         print("Please check your internet connection and try again.")
-        # Ensure reef is shut down even on error
         try:
             get_reef().shutdown()
         except:
