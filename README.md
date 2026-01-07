@@ -200,7 +200,7 @@ Output :-
 - **Not running server:** Remember to run `uvicorn api:app --reload`
 - **Wrong port:** Default port is 8000, use `http://localhost:8000` (not `0.0.0.0:8000`)
 
-## Todays Story Fetching API
+## Story Fetching API
 
 This phase implements endpoints to fetch HackerNews stories via the API.
 
