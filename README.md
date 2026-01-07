@@ -380,7 +380,158 @@ A summary generation endpoint with:
 - **Wrong method:** Use POST for generation (not GET)
 - **Empty text:** Validate that text is not empty after processing
 
+## Complete API Endpoints
 
+This phase completes the FastAPI backend with all planned endpoints for story fetching, trending detection, individual story retrieval, and search functionality.
+
+### What Was Built
+
+Additional API endpoints:
+- **`GET /stories/trending`** – Fetch only trending stories (important posts within last 12 hours)
+- **`GET /stories/{id}`** – Get a specific story by its HackerNews ID
+- **`GET /categories`** – List available categories for filtering (placeholder for future implementation)
+- **`GET /search?q={query}`** – Search stories by keyword in title
+
+### Implementation Details
+
+1. **`/stories/trending` Endpoint:**
+   - Fetches top 50 stories and filters for trending ones
+   - Uses `is_trending()` function (important + within 12 hours)
+   - Returns JSON array of trending stories
+
+2. **`/stories/{id}` Endpoint:**
+   - Fetches a specific story by HackerNews ID
+   - Includes story classification (NORMAL/IMPORTANT/TRENDING)
+   - Returns full story details with HackerNews URL
+   - Returns 404 if story not found
+
+3. **`/categories` Endpoint:**
+   - Returns list of planned categories
+   - Placeholder for future category detection implementation
+   - Includes note about future functionality
+
+4. **`/search` Endpoint:**
+   - Query parameter: `q` (required) - search keyword
+   - Query parameter: `limit` (optional, default: 10, max: 100)
+   - Searches story titles (case-insensitive)
+   - Currently searches top 100 stories (full archive search requires database)
+   - Returns matching stories with metadata
+
+### Complete API Reference
+
+All available endpoints:
+
+| Method  | Endpoint            | Description |
+|-------- |-------------------- |-------------|
+| `GET`   | `/`                 | Health check |
+| `GET`   | `/stories`          | Fetch top stories (limit parameter) |
+| `GET`   | `/stories/important`| Fetch important stories only |
+| `GET`   | `/stories/trending` | Fetch trending stories only |
+| `GET`   | `/stories/{id}`     | Get specific story by ID |
+| `GET`   | `/categories`       | List available categories |
+| `GET`   | `/search?q={query}` | Search stories by keyword |
+| `POST`  | `/summarize`        | Generate AI summary |
+
+### How to Test
+
+1. **Start the server:**
+   ```bash
+   uvicorn api:app --reload
+   ```
+
+2. **Test new endpoints:**
+   - **Trending stories:** http://localhost:8000/stories/trending
+   - **Specific story:** http://localhost:8000/stories/0000000 (replace with real ID)
+   - **Categories:** http://localhost:8000/categories
+   - **Search:** http://localhost:8000/search?q=python&limit=5
+   - **Interactive docs:** http://localhost:8000/docs
+
+### Example Responses
+
+**`/stories/trending` endpoint:**
+```json
+{
+  "stories": [
+    {
+      "id": 12345678,
+      "title": "Trending Story",
+      "author": "username",
+      "score": 200,
+      "comments": 60,
+      "url": "https://example.com",
+      "time": 1234567890
+    }
+  ]
+}
+```
+
+**`/stories/{id}` endpoint:**
+```json
+{
+  "id": 12345678,
+  "title": "Example Story",
+  "author": "username",
+  "score": 250,
+  "comments": 75,
+  "url": "https://example.com",
+  "time": 1234567890,
+  "classification": "TRENDING",
+  "hn_url": "https://news.ycombinator.com/item?id=12345678"
+}
+```
+
+**`/categories` endpoint:**
+```json
+{
+  "categories": [
+    "AI",
+    "Programming",
+    "Startups",
+    "Science",
+    "Web Development",
+    "Security",
+    "Hardware",
+    "Open Source",
+    "Business",
+    "Design"
+  ],
+  "note": "Category-based filtering is planned but not yet implemented. Stories will be automatically categorized in a future update."
+}
+```
+
+**`/search?q=python` endpoint:**
+```json
+{
+  "query": "python",
+  "results_count": 3,
+  "stories": [
+    {
+      "id": 12345678,
+      "title": "Python 3.12 Release",
+      "author": "username",
+      "score": 150,
+      "comments": 45,
+      "url": "https://example.com",
+      "time": 1234567890
+    }
+  ],
+  "note": "Search currently limited to top 100 stories. Full archive search will be available after database integration."
+}
+```
+
+Output:-
+<img width="940" height="141" alt="image" src="https://github.com/user-attachments/assets/c5c86f7d-d9a9-4e21-9663-7614279f4553" />
+<img width="940" height="502" alt="image" src="https://github.com/user-attachments/assets/66a6d817-ca7a-4c8c-8e51-69ea0022b981" />
+<img width="940" height="148" alt="image" src="https://github.com/user-attachments/assets/c81d08c1-5d0f-4d2e-ae83-bb04a8995db9" />
+<img width="940" height="198" alt="image" src="https://github.com/user-attachments/assets/b740ede8-1cd2-43c3-ad96-4b451325a857" />
+<img width="940" height="119" alt="image" src="https://github.com/user-attachments/assets/b2065943-e23f-4934-9244-f3c51e1446bf" />
+<img width="940" height="500" alt="image" src="https://github.com/user-attachments/assets/26721396-3e12-43f1-98ba-6f5da390d4c4" />
+
+### Error Handling
+All endpoints include proper error handling:
+- **400 Bad Request:** Invalid parameters (e.g., empty search query)
+- **404 Not Found:** Story ID doesn't exist
+- **500 Internal Server Error:** Server-side errors
 
 
 
