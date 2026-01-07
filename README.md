@@ -283,11 +283,106 @@ Output:-
 <img width="1919" height="770" alt="image" src="https://github.com/user-attachments/assets/8a652af7-ca3e-45f6-8c11-ff4add44e106" />
 
 
+## Summary Generation API
+
+This phase implements the endpoint to generate AI summaries for HackerNews stories.
+
+### What Was Built
+
+A summary generation endpoint with:
+- **`POST /summarize`** – Generate AI summaries for stories
+  - Accepts either `story_id` (HackerNews story ID) or `text` (direct text input)
+  - Generates 2-sentence summaries using OpenAI (with Gemini fallback)
+  - Returns JSON with the generated summary
+
+### Implementation Details
+
+1. **Request Model (`SummaryRequest`):**
+   - `story_id` (optional): HackerNews story ID to fetch and summarize
+   - `text` (optional): Direct text to summarize
+   - At least one parameter is required
+
+2. **Summary Generation:**
+   - If `story_id` is provided, fetches the story from HackerNews API
+   - Prepares text using `prepare_text_for_agent()` function
+   - Generates summary using `get_summary()` which tries OpenAI first, then Gemini as fallback
+
+3. **Error Handling:**
+   - **400 Bad Request:** If neither `story_id` nor `text` is provided
+   - **400 Bad Request:** If text is empty after processing
+   - **404 Not Found:** If story with given `story_id` doesn't exist
+   - **500 Internal Server Error:** If summary generation fails (both APIs unavailable)
+
+### How to Test
+
+1. **Start the server:**
+   ```bash
+   uvicorn api:app --reload
+   ```
+
+2. **Test with Swagger UI (easiest):**
+   - Open: http://localhost:8000/docs
+   - Find `POST /summarize` endpoint
+   - Click "Try it out"
+   - Enter request body:
+     ```json
+     {
+       "text": "Title: Test Post\nAuthor: user\nScore: 100"
+     }
+     ```
+   - Or use a story ID:
+     ```json
+     {
+       "story_id": 12345678
+     }
+     ```
+   - Click "Execute"
+
+3. **Test with PowerShell:**
+   ```powershell
+   # Test with text
+   $body = @{text = "Title: Test Post`nAuthor: user`nScore: 100"} | ConvertTo-Json
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/summarize" -Method POST -ContentType "application/json" -Body $body
+   
+   # Test with story_id (get ID from /stories endpoint first)
+   $body = @{story_id = 12345678} | ConvertTo-Json
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/summarize" -Method POST -ContentType "application/json" -Body $body
+   ```
+
+### Expected Output
+
+**Successful response:**
+```json
+{
+  "summary": "This is a two-sentence summary of the story. It captures the key points and main discussion.",
+  "story_id": 12345678
+}
+```
+
+**Error response (missing input):**
+```json
+{
+  "detail": "Either story_id or text must be provided"
+}
+```
+
+**Error response (story not found):**
+```json
+{
+  "detail": "Story with ID 12345678 not found"
+}
+```
+
 ### Common Mistakes to Avoid
 
-- **Wrong return type:** Return dict (not list directly)
-- **Not handling errors:** Add try/except blocks
-- **Missing imports:** Import `fetch_top_stories` and `is_important` from `main.py`
+- **Missing validation:** Always check that at least one parameter is provided
+- **Not handling errors:** Add try/except blocks for API failures
+- **Wrong method:** Use POST for generation (not GET)
+- **Empty text:** Validate that text is not empty after processing
+
+
+
+
 
 
 
